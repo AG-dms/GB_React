@@ -1,9 +1,11 @@
 import React from 'react';
 import style from './someComponent.scss'
-const textComponent = ({text})=>{
+import { Button } from 'reactstrap';
+const textComponent = (props)=>{
     return(
         <>
-            <h3 className='title' style={style.title}>{text}</h3>
+        
+            <h3 className='title' style={style.title}>Hello</h3>
            
         </>
     )
