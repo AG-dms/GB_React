@@ -1,17 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import './App.scss';
-import { Button } from 'reactstrap';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import SideBar from './SideBar';
+import { Button, ListGroup } from 'reactstrap';
+import { Input} from '@material-ui/core';
+import Message from './Message';
 
+const singleMessage = {
+  text: '',
+  author: '',
+  date: ''
+}
 
 const App = () => {
 
 
   // Переменная для хранения значений инпутов
-  let singleMessage = {
-    text: '',
-    author: ''
-  }
+
   // State списока постов
   const [messageList, setMessageList] = useState([]);
 
@@ -21,15 +25,8 @@ const App = () => {
   // Блок кнопки отправки сообщения пока отвечает робот
   const [blockBtn, setBlockBtn] = useState(false)
 
-  // выводим список постов через map
-  const list = messageList.map((item, id) => {
-    return (
-      <ListGroupItem className="listItem" key={id}>
-        <span className="author">{item.author} :</span>
-        <p className="text">{item.text}</p>
-      </ListGroupItem>
-    )
-  })
+  const inputRef = useRef(null);
+
 
   // Отлавливаем события изменения в инпутах
   const changeText = (event) => {
@@ -37,7 +34,7 @@ const App = () => {
   }
 
   const changeAuthor = (event) => {
-    setMessage({...message, author: event.target.value})
+    setMessage({...message, author: event.target.value, date: new Date()})
   }
 
 
@@ -48,11 +45,14 @@ const App = () => {
     setMessageList([...messageList, message
     ])
     setMessage({author: '', text: ''});
+    inputRef.current.focus();
   }
 
   useEffect(()=>{
+    inputRef.current.focus()
     if(messageList.length){
-      if(messageList[messageList.length-1].author !== 'Robot'){
+      inputRef.current.focus();
+      if(messageList[messageList.length -1].author !== 'Robot'){
         const robotAnswer = {
           author: 'Robot',
           text: 'Привет'
@@ -62,6 +62,7 @@ const App = () => {
           setBlockBtn(false)
         },1500)
       }
+      inputRef.current.focus();
     }
     },[messageList])
 
@@ -69,26 +70,33 @@ const App = () => {
   //Разметка
   return (
     <div className="App">
+      <SideBar/>
+      <div>
       <form className="form" onSubmit={subForm}>
         <div className=" form__div">
-        <input
+        <Input
           className="form__form-input"
           type="text"
+          label="label"
           value={message.author}
+          inputRef={inputRef}
           onChange={changeAuthor}
           placeholder="Как вас зовут?"/>
-        <input
+        <Input
           className="form__form-input"
           type="text"
           value={message.text}
           onChange={changeText}
-          placeholder="Текст сообщения"/>
+          placeholder="Введите текст"/>
         <Button disabled={blockBtn} className="button" color="primary">Отправить</Button>
         </div>
       </form>
       <ListGroup className="list">
-        {list}
+        <Message
+        messageList={messageList}
+        ></Message>
       </ListGroup>
+      </div>
     </div>
   );
 }
