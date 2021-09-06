@@ -1,32 +1,40 @@
 import React from 'react'
 import './SideBar.scss'
 import {List, ListItem, ListItemAvatar, Avatar  } from '@material-ui/core';
+import useId from "react-id-generator";
+
 
 function SideBar() {
+    const chats = [
+        {id: useId(),
+         name: 'Remy Sharp'
+        },
+        {id: useId(),
+         name: 'Travis Howard'
+        },
+        {id: useId(),
+        name: 'Cindy Baker'
+        }
+    
+    ]
+    const chatBar = chats.map((item)=>{
+        return(
+            <ListItem className="list-item" key={item.id}>
+                    <ListItemAvatar>
+                        <Avatar alt={item.name} src="/static/images/avatar/1.jpg"/>
+                    </ListItemAvatar>
+                    {item.name}
+                </ListItem>
+        )
+    })
     return (
         <div className="chat-bar">
             <List>
-                <ListItem className="list-item">
-                    <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg"/>
-                    </ListItemAvatar>
-                    Remy Sharp
-                </ListItem>
-                <ListItem className="list-item">
-                    <ListItemAvatar>
-                        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg"/>
-                    </ListItemAvatar>
-                    Remy Sharp
-                </ListItem>
-                <ListItem className="list-item">
-                    <ListItemAvatar>
-                        <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg"/>
-                    </ListItemAvatar>
-                    Remy Sharp
-                </ListItem>
+                {chatBar}
             </List>
         </div>
     )
+    
 }
 
 export default SideBar
