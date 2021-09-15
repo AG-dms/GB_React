@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { ListGroup } from 'reactstrap';
-import useId from 'react-id-generator';
 import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
@@ -11,19 +10,19 @@ import Message from '../Messages/Message';
 
 const Chats = () => {
   const { chatId } = useParams();
-  console.log(chatId)
+  const history = useHistory()
 
   const initialChats = [
     {
-      id: useId(),
+      id: 'chat-1',
       name: 'Remy Sharp',
     },
     {
-      id: useId(),
+      id: 'chat-2',
       name: 'Travis Howard',
     },
     {
-      id: useId(),
+      id: 'chat-3',
       name: 'Cindy Baker',
     },
   ];
@@ -54,8 +53,9 @@ const Chats = () => {
 
   // Добавление нового чата (Вызывается из компонента SideBar)
   // Обернуть в useCallback не получается, возникает ошибка вложенных хуков
-  const AddChat = (name)=>{
-    const newChat = {id: useId(), name: name}
+  const AddChat = useCallback(
+    (name) => {
+      const newChat = {id: `'chat-${Date.now()}`, name: name}
     const newMessages = 
       {
         author: newChat.name,
@@ -65,17 +65,25 @@ const Chats = () => {
     setMessageList((prevMess)=>({
           ...prevMess, [newChat.id]: [newMessages]
         }))
-  }
+    },
+    [chats]
+  )
 
    //Удаление чата
-   const deleteChat = (id)=>{
-     const newChatsArr = chats.filter((item)=>{
+   const deleteChat = useCallback(
+     (id) => {
+      const newChatsArr = chats.filter((item)=>{
         return item.id !== id
      })
-
      setChats(newChatsArr)
+     const newMess = {...messageList};
+     delete newMess[id]
+     setMessageList(newMess)
 
-  }
+     if(chatId === id){
+       history.push('/chats')
+     }
+     },[chats, messageList, chatId, history])
 
   // Обновление списка чатов и добавление новому чату сообщений по умолчанию
   useEffect(()=>{
@@ -90,6 +98,7 @@ const Chats = () => {
   useEffect(() => {
     let timeout;
     const curMess = messageList[chatId];
+    // Проверка чтобы не было ошибки
     if(chatId && curMess){
       if (messageList[chatId].length && messageList[chatId].length !== 1 && curMess?.[curMess.length -1 ]?.author !== 'Robot') {
 

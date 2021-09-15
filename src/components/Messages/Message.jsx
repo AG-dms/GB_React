@@ -15,7 +15,8 @@ function Message({ messageList, chatId }) {
     });
     return list;
   } else return (
-    <div>Такого чата не существует
+    <div>
+      Такого чата не существует. Выберите чат из списка слева
   
     </div>
   )
