@@ -55,21 +55,30 @@ const Chats = () => {
   // Добавление нового чата (Вызывается из компонента SideBar)
   // Обернуть в useCallback не получается, возникает ошибка вложенных хуков
   const AddChat = (name)=>{
-      const newChat = {id: useId(), name: name}
-      const newMessages = 
-        {
-          author: newChat.name,
-          text: 'text',
-        }
+    const newChat = {id: useId(), name: name}
+    const newMessages = 
+      {
+        author: newChat.name,
+        text: 'text',
+      }
     setChats([...chats, newChat])
     setMessageList((prevMess)=>({
           ...prevMess, [newChat.id]: [newMessages]
         }))
-        console.log(messageList)
   }
+
+   //Удаление чата
+   const deleteChat = (id)=>{
+     const newChatsArr = chats.filter((item)=>{
+        return item.id !== id
+     })
+
+     setChats(newChatsArr)
+
+  }
+
   // Обновление списка чатов и добавление новому чату сообщений по умолчанию
   useEffect(()=>{
-    console.log(messageList)
   }, [chats, messageList])
 
   // Обработка формы
@@ -81,7 +90,7 @@ const Chats = () => {
   useEffect(() => {
     let timeout;
     const curMess = messageList[chatId];
-    if(chatId){
+    if(chatId && curMess){
       if (messageList[chatId].length && messageList[chatId].length !== 1 && curMess?.[curMess.length -1 ]?.author !== 'Robot') {
 
         timeout = setTimeout(() => {
@@ -99,21 +108,23 @@ const Chats = () => {
   return (
     <div className="App">
       <Link to="/">
-        <Button color="secondary">На главную</Button>{' '}
+        <Button className='back-btn' color="secondary">На главную</Button>{' '}
       </Link>
       <div className="main-display">
         <SideBar chats={chats} 
-        addChat={AddChat}/>
+        addChat={AddChat}
+        deleteChat={deleteChat}
+        />
           <div>
             {chatId ?
-            <div>
+            <>
               <FormMess subForm={subForm}/>
               <ListGroup className="list">
                 <Message messageList={messageList} chatId={chatId}>
               </Message>
               </ListGroup>
-            </div>
-            : <div>Выберите чат </div> 
+            </>
+            : <div className="no-chats">Выберите чат </div> 
             }
           </div>
       </div>
