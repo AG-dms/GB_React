@@ -1,0 +1,46 @@
+.App{
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  width: 90vw;
+  height: 100vh;
+  padding: 50px 100px;
+
+  margin: 0 auto;
+}
+.button{
+  height: inherit;
+}
+.form{
+  &__form-input{
+      border-radius: 5px;
+      height: inherit;
+  }
+  &__form-input:nth-child(2){
+      width: 40vw;
+  }
+  &__div{
+      display: flex;
+      align-items: center;
+      height: 45px;
+  }
+
+}
+
+.author{
+  font-size: 14px;
+  color: rgb(100, 100, 100);
+}
+
+.list{
+  margin-top: 15px;
+  
+}
+.listItem{
+  height: 65px;
+  padding: 0 10px;
+}
+.main-display{
+  display: flex;
+}
+

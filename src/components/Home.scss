@@ -1,0 +1,19 @@
+.flex-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top:100px;
+  flex-direction: column;
+}
+
+.links{
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.link-btn:not(:last-child){
+  margin-right: 20px;
+}
+
+
