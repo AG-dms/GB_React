@@ -2,6 +2,7 @@ import React from 'react';
 import { ListGroupItem } from 'reactstrap';
 
 function Message({ messageList, chatId }) {
+  //Проверка на существование такого объекта по ссылке
   if(messageList[chatId]){
     const list = messageList[chatId].map((item, id) => {
       return (
