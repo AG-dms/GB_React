@@ -1,93 +1,50 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { ListGroup } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
 import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
 import Message from '../Messages/Message';
+import { addChat, deleteChatItem } from '../../store/chats/actions';
+import { addMessage, deleteMessage } from '../../store/messages/actions';
+
+
+// Не понял куда и как засунуть deleteMessages
+// Получается что при удалении чата сообщения остается в стейте
+// Но подход с урока наверное не подоедёт к моему варианту приложения
 
 const Chats = () => {
   const { chatId } = useParams();
   const history = useHistory()
+  const dispatch = useDispatch();
 
-  const initialChats = [
-    {
-      id: 'chat-1',
-      name: 'Remy Sharp',
-    },
-    {
-      id: 'chat-2',
-      name: 'Travis Howard',
-    },
-    {
-      id: 'chat-3',
-      name: 'Cindy Baker',
-    },
-  ];
-  const initialMessages = initialChats.reduce((acc, chat) => {
-    acc[chat.id] = [
-      {
-        author: chat.name,
-        text: 'text',
-      },
-    ];
-    return acc;
-  }, {});
-
- 
-
-  // Переменная для хранения значений инпутов State списока постов
-  const [messageList, setMessageList] = useState(initialMessages);
-
-  const [chats, setChats] = useState(initialChats);
-
-  const sendMessage = useCallback((message)=>{
-    setMessageList((prevMessage)=>({
-      ...prevMessage,
-      [chatId]:[
-        ...prevMessage[chatId], message
-      ]}))
-  }, [chatId])
+// VSC ругается что Свойство "chats" не существует в типе "DefaultRootState" и messages соответственно
+// Но без них не работает
+  const chats = useSelector((state)=> state.chats.chats)
+  const messageList = useSelector((state => state.messages.messages))
+   
+  const sendMessage = useCallback(({text, author})=>{
+    dispatch(addMessage(chatId, text, author))
+  }, [chatId, dispatch])
 
   // Добавление нового чата (Вызывается из компонента SideBar)
-  // Обернуть в useCallback не получается, возникает ошибка вложенных хуков
-  const AddChat = useCallback(
-    (name) => {
-      const newChat = {id: `'chat-${Date.now()}`, name: name}
-    const newMessages = 
-      {
-        author: newChat.name,
-        text: 'text',
-      }
-    setChats([...chats, newChat])
-    setMessageList((prevMess)=>({
-          ...prevMess, [newChat.id]: [newMessages]
-        }))
+  const AddChat = useCallback((name) => {
+    dispatch(addChat(name))
     },
-    [chats]
+    [dispatch]
   )
 
    //Удаление чата
-   const deleteChat = useCallback(
-     (id) => {
-      const newChatsArr = chats.filter((item)=>{
-        return item.id !== id
-     })
-     setChats(newChatsArr)
-     const newMess = {...messageList};
-     delete newMess[id]
-     setMessageList(newMess)
-
+   const deleteChat = useCallback((id) => {
+    dispatch(deleteChatItem(id))
      if(chatId === id){
        history.push('/chats')
      }
-     },[chats, messageList, chatId, history])
+     },[chatId, history, dispatch])
 
-  // Обновление списка чатов и добавление новому чату сообщений по умолчанию
-  useEffect(()=>{
-  }, [chats, messageList])
 
   // Обработка формы
   const subForm = useCallback((message) => {
@@ -100,8 +57,7 @@ const Chats = () => {
     const curMess = messageList[chatId];
     // Проверка чтобы не было ошибки
     if(chatId && curMess){
-      if (messageList[chatId].length && messageList[chatId].length !== 1 && curMess?.[curMess.length -1 ]?.author !== 'Robot') {
-
+      if (messageList[chatId].length && curMess?.[curMess.length -1 ]?.author !== 'Robot') { 
         timeout = setTimeout(() => {
           sendMessage({
             author: 'Robot',
@@ -113,10 +69,13 @@ const Chats = () => {
     return () => clearTimeout(timeout);
   }, [messageList, chatId, sendMessage]);
 
+
+  const chatExist = useMemo(()=> !!chats.find(({id}) => id === chatId), [chatId, chats])
+
   //Разметка
   return (
     <div className="App">
-      <Link to="/">
+      <Link to="/"> 
         <Button className='back-btn' color="secondary">На главную</Button>{' '}
       </Link>
       <div className="main-display">
@@ -125,7 +84,7 @@ const Chats = () => {
         deleteChat={deleteChat}
         />
           <div>
-            {chatId ?
+            {chatId && chatExist ?
             <>
               <FormMess subForm={subForm}/>
               <ListGroup className="list">
@@ -133,7 +92,9 @@ const Chats = () => {
               </Message>
               </ListGroup>
             </>
-            : <div className="no-chats">Выберите чат </div> 
+            : chats.length === 0 ? <div className="no-chats">
+                Список чатов пуст, пожалуйста создайте новый </div> :
+                <div className="no-chats">Выберите чат </div>
             }
           </div>
       </div>

@@ -39,9 +39,6 @@ function SideBar({chats, addChat, deleteChat}) {
     );
   });
 
-
-
-
   useEffect(() => {
     if (hide) {
       inputRef.current.focus();

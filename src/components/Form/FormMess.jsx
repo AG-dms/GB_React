@@ -43,7 +43,6 @@ function FormMess({ subForm }) {
   const handleAddMessage = (e) => {
     e.preventDefault();
 
-    // В пропс функцию передаем соавх
     subForm(message);
     setMessage({ author: '', text: '' });
     inputRef.current.focus();

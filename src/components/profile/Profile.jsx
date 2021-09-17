@@ -1,19 +1,28 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import './Profile.scss'
-import { toggleShowName } from '../../store/profile/actions';
+import { changeName, toggleShowName } from '../../store/profile/actions';
 
 
 function Profile() {
-
-    const {showName, name} = useSelector((state)=> state)
+    const [value, setValue] = useState()
+    const {showName, name} = useSelector((state) => state.profile)
     const dispatch = useDispatch();
 
     const handleClick = ()=>{
       dispatch(toggleShowName);
+    }
+
+    const handleSubmit = (e)=>{
+      e.preventDefault();
+      dispatch(changeName(value))
+    }
+
+    const handleChange = (e)=>{
+      setValue(e.target.value)
     }
      
   return (
@@ -24,6 +33,10 @@ function Profile() {
       </Link>
       Тут будет страница профиля
     </div>
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={value} onChange={handleChange} />
+      <button type="submit"> Запомнить имя</button>
+    </form>
     <input 
            type="checkbox"
            checked={showName}
