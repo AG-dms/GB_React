@@ -1,22 +1,25 @@
-import { createStore, combineReducers, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
-import { chatsReducer } from "./chats/reducer";
-import { profileReducer } from "./profile/reducer";
-import { messagesReducer } from "./messages/reducer";
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import thunk from 'redux-thunk';
+import {chatsReducer} from './chats/reducer';
+import {profileReducer} from './profile/reducer';
+import {messagesReducer} from './messages/reducer';
 // Импортируем объекты и storage
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import {persistStore, persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import {newsReducer} from './news/reducer';
 
 // Создаем настройки
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage,
+  blacklist: ['news'],
 };
 
 const rootReducer = combineReducers({
   profile: profileReducer,
   chats: chatsReducer,
   messages: messagesReducer,
+  news: newsReducer,
 });
 
 // Создаем редьюсер

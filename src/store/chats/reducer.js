@@ -1,8 +1,10 @@
-import { ADD_CHAT, DELETE_CHAT } from "./actions";
+import {
+  ADD_CHAT,
+  DELETE_CHAT
+} from "./actions";
 
 const initialState = {
-  chats: [
-    {
+  chats: [{
       id: 'chat-1',
       name: 'Remy Sharp',
     },
@@ -18,24 +20,30 @@ const initialState = {
 
 }
 
-export const chatsReducer = (state = initialState, {type, payload}) => {
-  switch(type){
-    case ADD_CHAT:{
+export const chatsReducer = (state = initialState, {
+  type,
+  payload
+}) => {
+  switch (type) {
+    case ADD_CHAT: {
       return {
         ...state,
-        chats: [...state.chats, {id: `chat-${Date.now()}`, name: payload}]
+        chats: [...state.chats, {
+          id: `chat-${Date.now()}`,
+          name: payload
+        }]
       }
     }
-    case DELETE_CHAT :{
-      const newChats = state.chats.filter((item)=>{
+    case DELETE_CHAT: {
+      const newChats = state.chats.filter((item) => {
         return item.id !== payload
-     })
+      })
       return {
         ...state,
         chats: newChats
       }
     }
-    default: 
-    return state;
+    default:
+      return state;
   }
 }
