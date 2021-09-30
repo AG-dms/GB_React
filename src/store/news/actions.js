@@ -19,14 +19,13 @@ const getArticlesFailure = (error) => ({
 export const getArticles = () => (dispatch) => {
   dispatch(getArticlesPending());
   const fetchData = async () => {
-    await axios
-      .get(`https://jsonplaceholder.typicode.com/posts`)
-      .then((res) => {
-        dispatch(getArticlesSucsess(res.data));
-      })
-      .catch((error) => {
-        dispatch(getArticlesFailure(error));
-      })
+    try {
+      const res = await axios.get(`https://jsonplaceholder.typicode.com/posts`);
+      dispatch(getArticlesSucsess(res.data));
+      console.log(res.data)
+    } catch (error) {
+      dispatch(getArticlesFailure(error));
+    }
   };
   fetchData();
 

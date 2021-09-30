@@ -1,18 +1,18 @@
-import React, { useCallback, useMemo } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { ListGroup } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useCallback, useMemo} from 'react';
+import {useParams, useHistory} from 'react-router-dom';
+import {Button} from 'reactstrap';
+import {Link} from 'react-router-dom';
+import {ListGroup} from 'reactstrap';
+import {useSelector, useDispatch} from 'react-redux';
 import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
 import Message from '../Messages/Message';
-import { addChat, deleteChatItem } from '../../store/chats/actions';
-import { addMessageWithReply } from '../../store/messages/actions';
+import {addChat, deleteChatItem} from '../../store/chats/actions';
+import {addMessageWithReply} from '../../store/messages/actions';
 
 const Chats = () => {
-  const { chatId } = useParams();
+  const {chatId} = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const Chats = () => {
   const messageList = useSelector((state) => state.messages.messages);
 
   const sendMessage = useCallback(
-    ({ text, author }) => {
+    ({text, author}) => {
       dispatch(addMessageWithReply(chatId, text, author));
     },
     [chatId, dispatch],
@@ -50,7 +50,7 @@ const Chats = () => {
     [sendMessage],
   );
 
-  const chatExist = useMemo(() => !!chats.find(({ id }) => id === chatId), [chatId, chats]);
+  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
 
   //Разметка
   return (
