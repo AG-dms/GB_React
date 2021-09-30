@@ -1,29 +1,27 @@
-import React from 'react'
+/** @format */
+
+import React, {useState} from 'react';
 import {Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import Container from '@material-ui/core/Container';
-import './Home.scss'
+import './Home.scss';
 
-function Home() {
+function Home({onLogin, onSignUp}) {
   return (
     <Container>
-      <div className="flex-container">
-        <h1>Home page</h1>
-        <div className="links">
-          <Link className="link-btn" to="/chats/">
-            <Button color="primary">
-              Чаты
-            </Button>{' '}
+      <div className='flex-container'>
+        <h1>React-chats</h1>
+        <div className='links'>
+          <Link className='link-btn' to='/signUp/'>
+            <Button color='primary'>Регистрация</Button>
           </Link>
-          <Link className="link-btn" to="/profile/">
-            <Button color="primary">
-              Профиль
-            </Button>{' '}
+          <Link className='link-btn' to='/login/'>
+            <Button color='primary'>Войти</Button>
           </Link>
         </div>
       </div>
     </Container>
-  )
+  );
 }
 
-export default Home
+export default Home;
