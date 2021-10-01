@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState, useEffect, useRef} from 'react';
 import {useParams, useHistory} from 'react-router-dom';
 import {Button} from 'reactstrap';
 import {Link} from 'react-router-dom';
@@ -8,39 +8,32 @@ import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
 import Message from '../Messages/Message';
-import {addChat, deleteChatItem} from '../../store/chats/actions';
-import {addMessageWithReply} from '../../store/messages/actions';
+import {addChat, addChatsFb, deleteChatItem, initChats} from '../../store/chats/actions';
+import {db} from '../../Services/firebase';
+import {ref, set, onValue} from 'firebase/database';
+import {addMessageFb, initMessages} from '../../store/messages/actions';
 
 const Chats = () => {
   const {chatId} = useParams();
-  const history = useHistory();
+  const chats = useSelector((state) => state.chats.chats);
+  const messages = useSelector((state) => state.messages.messages);
   const dispatch = useDispatch();
 
-  const chats = useSelector((state) => state.chats.chats);
-  const messageList = useSelector((state) => state.messages.messages);
+  useEffect(() => {
+    dispatch(initChats());
+    dispatch(initMessages());
+  }, []);
 
+  const handleAddChat = (name) => {
+    dispatch(addChatsFb(name));
+  };
+
+  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
   const sendMessage = useCallback(
     ({text, author}) => {
-      dispatch(addMessageWithReply(chatId, text, author));
+      dispatch(addMessageFb(text, author, chatId));
     },
-    [chatId, dispatch],
-  );
-
-  const AddChat = useCallback(
-    (name) => {
-      dispatch(addChat(name));
-    },
-    [dispatch],
-  );
-
-  const deleteChat = useCallback(
-    (id) => {
-      dispatch(deleteChatItem(id));
-      if (chatId === id) {
-        history.push('/chats');
-      }
-    },
-    [chatId, history, dispatch],
+    [chatId],
   );
 
   const subForm = useCallback(
@@ -49,8 +42,6 @@ const Chats = () => {
     },
     [sendMessage],
   );
-
-  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
 
   //Разметка
   return (
@@ -61,13 +52,13 @@ const Chats = () => {
         </Button>{' '}
       </Link>
       <div className='main-display'>
-        <SideBar chats={chats} addChat={AddChat} deleteChat={deleteChat} />
+        <SideBar chats={chats} addChat={handleAddChat} />
         <div>
           {chatId && chatExist ? (
             <>
               <FormMess subForm={subForm} />
               <ListGroup className='list'>
-                <Message messageList={messageList} chatId={chatId}></Message>
+                <Message messages={messages} chatId={chatId}></Message>
               </ListGroup>
             </>
           ) : chats.length === 0 ? (

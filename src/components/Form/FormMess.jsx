@@ -1,8 +1,8 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Input } from '@material-ui/core';
-import { Button } from 'reactstrap';
+import React, {useState, useRef, useCallback, useEffect} from 'react';
+import {Input} from '@material-ui/core';
+import {Button} from 'reactstrap';
 
-function FormMess({ subForm }) {
+function FormMess({subForm}) {
   const singleMessage = {
     text: '',
     author: '',
@@ -24,7 +24,7 @@ function FormMess({ subForm }) {
         text: event.target.value,
       });
     },
-    [message]
+    [message],
   );
 
   // Обработка инпута Автор сообщения
@@ -36,24 +36,37 @@ function FormMess({ subForm }) {
         date: new Date(),
       });
     },
-    [message]
+    [message],
   );
 
   // Обработка отправки формы
   const handleAddMessage = (e) => {
     e.preventDefault();
-
     subForm(message);
-    setMessage({ author: '', text: '' });
+    setMessage({author: '', text: ''});
     inputRef.current.focus();
   };
 
   return (
-    <form className="form" onSubmit={handleAddMessage}>
-      <div className=" form__div">
-        <Input className="form__form-input" type="text" label="label" value={message.author} inputRef={inputRef} onChange={changeAuthor} placeholder="Как вас зовут?" />
-        <Input className="form__form-input" type="text" value={message.text} onChange={changeText} placeholder="Введите текст" />
-        <Button className="button" color="primary">
+    <form className='form' onSubmit={handleAddMessage}>
+      <div className=' form__div'>
+        <Input
+          className='form__form-input'
+          type='text'
+          label='label'
+          value={message.author}
+          inputRef={inputRef}
+          onChange={changeAuthor}
+          placeholder='Как вас зовут?'
+        />
+        <Input
+          className='form__form-input'
+          type='text'
+          value={message.text}
+          onChange={changeText}
+          placeholder='Введите текст'
+        />
+        <Button className='button' color='primary'>
           Отправить
         </Button>
       </div>
