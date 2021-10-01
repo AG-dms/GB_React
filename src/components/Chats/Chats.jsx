@@ -8,60 +8,30 @@ import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
 import Message from '../Messages/Message';
-// import {addChat, deleteChatItem} from '../../store/chats/actions';
-// import {addMessageWithReply} from '../../store/messages/actions';
+import {addChat, addChatsFb, deleteChatItem, initChats} from '../../store/chats/actions';
 import {db} from '../../Services/firebase';
 import {ref, set, onValue} from 'firebase/database';
+import {addMessageFb, initMessages} from '../../store/messages/actions';
 
 const Chats = () => {
   const {chatId} = useParams();
-  const history = useHistory();
+  const chats = useSelector((state) => state.chats.chats);
+  const messages = useSelector((state) => state.messages.messages);
+  const dispatch = useDispatch();
 
-  //чаты из бд
-  const [chats, setChats] = useState([]);
   useEffect(() => {
-    //userDbRef получаем базу данных, второй аргумент - раздел бд
-    const chatsDbRef = ref(db, 'chats');
-    // получаем снимок бд и приобразуем в объект методом val()
-    onValue(chatsDbRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log('--------', data);
-      setChats(Object.values(data || {}));
-    });
+    dispatch(initChats());
+    dispatch(initMessages());
   }, []);
 
   const handleAddChat = (name) => {
-    const newId = `chat-${Date.now()}`;
-    const chatsDbRef = ref(db, `chats/${newId}`);
-    set(chatsDbRef, {id: newId, name: name});
+    dispatch(addChatsFb(name));
   };
 
-  // добавление сообщений через БД
-  const unsubscribeMessages = useRef(null);
-  const [messages, setMessages] = useState([]);
-  useEffect(() => {
-    if (unsubscribeMessages.current) {
-      unsubscribeMessages.current();
-    }
-    const messagesDbRef = ref(db, `messages/${chatId}`);
-    const unsubscribe = onValue(messagesDbRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log('--------', data);
-      setMessages(Object.values(data || {}));
-    });
-    unsubscribeMessages.current = unsubscribe;
-    return () => unsubscribe();
-  }, [chatId]);
-
+  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
   const sendMessage = useCallback(
     ({text, author}) => {
-      const newId = `message-${Date.now()}`;
-      const messagesDbRef = ref(db, `messages/${chatId}/${newId}`);
-      set(messagesDbRef, {
-        author,
-        text,
-        id: newId,
-      });
+      dispatch(addMessageFb(text, author, chatId));
     },
     [chatId],
   );
@@ -72,44 +42,6 @@ const Chats = () => {
     },
     [sendMessage],
   );
-
-  // const messageList = useSelector((state) => state.messages.messages);
-  // const dispatch = useDispatch();
-  // чаты и сообщения из редакса
-
-  // const chats = useSelector((state) => state.chats.chats);
-  // const sendMessage = useCallback(
-  //   ({text, author}) => {
-  //     dispatch(addMessageWithReply(chatId, text, author));
-  //   },
-  //   [chatId, dispatch],
-  // );
-
-  // const AddChat = useCallback(
-  //   (name) => {
-  //     dispatch(addChat(name));
-  //   },
-  //   [dispatch],
-  // );
-
-  // const deleteChat = useCallback(
-  //   (id) => {
-  //     dispatch(deleteChatItem(id));
-  //     if (chatId === id) {
-  //       history.push('/chats');
-  //     }
-  //   },
-  //   [chatId, history, dispatch],
-  // );
-
-  // const subForm = useCallback(
-  //   (message) => {
-  //     sendMessage(message);
-  //   },
-  //   [sendMessage],
-  // );
-
-  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
 
   //Разметка
   return (

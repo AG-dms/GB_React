@@ -6,7 +6,7 @@ function Message({messages, chatId}) {
     console.log('test', messages);
   }, [messages]);
   if (messages.length) {
-    const list = messages.map((item, id) => {
+    const list = Object.values(messages || {}).map((item, id) => {
       return (
         <ListGroupItem className='listItem' key={id}>
           <span className='author'>{item.author} :</span>
