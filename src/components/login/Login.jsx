@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
+import TextField from '@material-ui/core/TextField';
 import './login.scss';
 
-function Login({onLogin, onSignUp}) {
+function Login({ onLogin, onSignUp }) {
   const [login, setLogin] = useState('');
   const [pass, setPass] = useState('');
   const handleLoginChange = (e) => {
@@ -26,9 +27,26 @@ function Login({onLogin, onSignUp}) {
     <Container>
       <h1>Войти в чат</h1>
       <form className='login-form' onSubmit={handleSubmit}>
-        <input type='text' placeholder='userName' value={login} onChange={handleLoginChange} />
-        <input type='password' placeholder='password' value={pass} onChange={handlePassChange} />
-        <input type='submit' />
+        {/* <input type='text' placeholder='userName' value={login} onChange={handleLoginChange} /> */}
+        <TextField
+          id='outlined-basic'
+          label='userName'
+          variant='outlined'
+          value={login}
+          size='small'
+          onChange={handleLoginChange}
+        />
+        <TextField
+          type='password'
+          id='outlined-basic'
+          label='password'
+          variant='outlined'
+          value={pass}
+          size='small'
+          onChange={handlePassChange}
+        />
+
+        <input className='btn-login' type='submit' />
       </form>
     </Container>
   );

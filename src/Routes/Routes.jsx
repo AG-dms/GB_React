@@ -14,7 +14,8 @@ import {login, signUp, signOut, auth} from '../Services/firebase';
 import {onAuthStateChanged} from 'firebase/auth';
 
 function Routes() {
-  const [authed, setAuthed] = useState(false);
+  const [authed,
+    setAuthed] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -29,14 +30,14 @@ function Routes() {
     return unsubscribe;
   }, []);
 
-  const handleLogin = async (email, pass) => {
+  const handleLogin = async(email, pass) => {
     try {
       await login(email, pass);
     } catch (e) {
       console.log(e);
     }
   };
-  const handleSignUp = async (email, pass) => {
+  const handleSignUp = async(email, pass) => {
     try {
       await signUp(email, pass);
       // setAuthed(true);
@@ -45,7 +46,7 @@ function Routes() {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = async() => {
     try {
       await signOut();
     } catch (e) {
@@ -56,22 +57,22 @@ function Routes() {
     <BrowserRouter>
       <Switch>
         <PublicRoute path='/' exact authed={authed}>
-          <Home onLogin={handleLogin} />
+          <Home onLogin={handleLogin}/>
         </PublicRoute>
         <PublicRoute path='/login' exact authed={authed}>
-          <Login onLogin={handleLogin} />
+          <Login onLogin={handleLogin}/>
         </PublicRoute>
         <PublicRoute path='/signUp' exact authed={authed}>
-          <SignUp onSignUp={handleSignUp} />
+          <SignUp onSignUp={handleSignUp}/>
         </PublicRoute>
         <PrivateRoute path='/chats/:chatId?' authed={authed}>
-          <Chats />
+          <Chats/>
         </PrivateRoute>
         <PrivateRoute path='/profile' authed={authed}>
-          <Profile onLogout={handleLogout} />
+          <Profile onLogout={handleLogout}/>
         </PrivateRoute>
         <Route path='/news'>
-          <News />
+          <News/>
         </Route>
         <Route>
           <h3>404 not found</h3>

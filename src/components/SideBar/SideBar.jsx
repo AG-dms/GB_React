@@ -1,17 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./SideBar.scss";
-import { List, ListItem, ListItemAvatar, Avatar, Input } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { AddCircle, Cancel, Add } from "@material-ui/icons";
-import DeleteIcon from "@material-ui/icons/Delete";
+import React, { useState, useRef, useEffect } from 'react';
+import './SideBar.scss';
+import { List, ListItem, ListItemAvatar, Avatar, Input } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { AddCircle, Cancel, Add } from '@material-ui/icons';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function SideBar({ chats, addChat, deleteChat }) {
   // Обработчик удаления чата
 
-  const [nameChat, setNameChat] = useState("");
+  const [nameChat, setNameChat] = useState('');
 
   const [hide, setHide] = useState(false);
-  const inputRef = useRef("");
+  const inputRef = useRef('');
 
   const showInput = () => {
     setHide(!hide);
@@ -23,16 +23,16 @@ function SideBar({ chats, addChat, deleteChat }) {
 
   const chatBar = chats.map((item) => {
     return (
-      <ListItem className="list-item" key={item.id}>
-        <Link className="link-chat" to={`/chats/${item.id}`}>
+      <ListItem className='list-item' key={item.id}>
+        <Link className='link-chat' to={`/chats/${item.id}`}>
           <ListItemAvatar>
-            <Avatar alt={item.name} src="/static/images/avatar/1.jpg" />
+            <Avatar alt={item.name} src='/static/images/avatar/1.jpg' />
           </ListItemAvatar>
           {item.name}
         </Link>
         <DeleteIcon
-          fontSize="small"
-          className="basket"
+          fontSize='small'
+          className='basket'
           onClick={() => {
             removeChat(item.id);
           }}
@@ -55,40 +55,40 @@ function SideBar({ chats, addChat, deleteChat }) {
   // Передаем имя нового чата и создаем его в Chats
   const makeNewChat = () => {
     addChat(nameChat);
-    setNameChat("");
+    setNameChat('');
     setHide(!hide);
   };
 
   // Разметка компонента
   return (
-    <div className="chat-bar">
+    <div className='chat-bar'>
       {hide && (
-        <div className="hide-chat">
+        <div className='hide-chat'>
           <Input
-            type="text"
+            type='text'
             inputRef={inputRef}
             onChange={callNewChat}
             value={nameChat}
-            placeholder="Имя нового чата"
+            placeholder='Имя нового чата'
           />
-          <button className="addChat " onClick={makeNewChat}>
-            <Add fontSize="large" />
+          <button className='addChat ' onClick={makeNewChat}>
+            <Add fontSize='large' />
           </button>
         </div>
       )}
-      <button className="add-btn" onClick={showInput}>
+      <button className='add-btn' onClick={showInput}>
         {!hide ? (
           <>
-            <AddCircle fontSize="large" color="primary" className="pluse" />
+            <AddCircle fontSize='large' color='primary' className='pluse' />
             <span>Добавить чат</span>
           </>
         ) : (
           <>
-            <Cancel fontSize="large" color="primary" /> <span>Закрыть</span>
+            <Cancel fontSize='large' color='primary' /> <span>Закрыть</span>
           </>
         )}
       </button>
-      <List>{chatBar}</List>
+      <List className='list-bar'>{chatBar}</List>
     </div>
   );
 }

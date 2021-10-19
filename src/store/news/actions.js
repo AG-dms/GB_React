@@ -3,7 +3,7 @@ export const GET_ARTICLES_PENDING = 'ARTICLES::GET_ARTICLES_PENDING';
 export const GET_ARTICLES_SUCSESS = 'ARTICLES::GET_ARTICLES_SUCSESS';
 export const GET_ARTICLES_FAILURE = 'ARTICLES::GET_ARTICLES_GET_ARTICLES_FAILURE';
 
-const getArticlesPending = () => ({
+export const getArticlesPending = () => ({
   type: GET_ARTICLES_PENDING
 })
 

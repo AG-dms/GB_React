@@ -1,12 +1,12 @@
 /** @format */
 
-import React, {useState} from 'react';
-import {Button} from 'reactstrap';
-import {Link} from 'react-router-dom';
+import React from 'react';
+import { Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import './Home.scss';
 
-function Home({onLogin, onSignUp}) {
+function Home({ onLogin, onSignUp }) {
   return (
     <Container>
       <div className='flex-container'>

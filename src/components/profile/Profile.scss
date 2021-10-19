@@ -1,7 +1,37 @@
-.profile-container{
+.profile-container {
   padding: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-a{
+.title-profile {
+  margin-right: 10px;
+  align-self: center;
+}
+
+a {
   text-decoration: none;
+}
+
+.input-block {
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.yourName {
+  margin-top: 15px;
+}
+
+.avatar > img {
+  width: 120px;
+  height: 120px;
+}
+
+.profile-head {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
 }

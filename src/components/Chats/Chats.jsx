@@ -1,20 +1,20 @@
-import React, {useCallback, useMemo, useState, useEffect, useRef} from 'react';
-import {useParams, useHistory} from 'react-router-dom';
-import {Button} from 'reactstrap';
-import {Link} from 'react-router-dom';
-import {ListGroup} from 'reactstrap';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { ListGroup } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
 import './Chats.scss';
 import FormMess from '../Form/FormMess.jsx';
 import SideBar from '../SideBar/SideBar';
 import Message from '../Messages/Message';
-import {addChat, addChatsFb, deleteChatItem, initChats} from '../../store/chats/actions';
-import {db} from '../../Services/firebase';
-import {ref, set, onValue} from 'firebase/database';
-import {addMessageFb, initMessages} from '../../store/messages/actions';
+import { addChat, addChatsFb, deleteChatItem, initChats } from '../../store/chats/actions';
+// import {db} from '../../Services/firebase';
+// import {ref, set, onValue} from 'firebase/database';
+import { addMessageFb, initMessages } from '../../store/messages/actions';
 
 const Chats = () => {
-  const {chatId} = useParams();
+  const { chatId } = useParams();
   const chats = useSelector((state) => state.chats.chats);
   const messages = useSelector((state) => state.messages.messages);
   const dispatch = useDispatch();
@@ -28,9 +28,9 @@ const Chats = () => {
     dispatch(addChatsFb(name));
   };
 
-  const chatExist = useMemo(() => !!chats.find(({id}) => id === chatId), [chatId, chats]);
+  const chatExist = useMemo(() => !!chats.find(({ id }) => id === chatId), [chatId, chats]);
   const sendMessage = useCallback(
-    ({text, author}) => {
+    ({ text, author }) => {
       dispatch(addMessageFb(text, author, chatId));
     },
     [chatId],

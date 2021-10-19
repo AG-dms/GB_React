@@ -1,20 +1,19 @@
-import React, {useEffect} from 'react';
-import {ListGroupItem} from 'reactstrap';
+import React, { useEffect } from 'react';
+import { ListGroupItem } from 'reactstrap';
 
-function Message({messages, chatId}) {
+function Message({ messages, chatId }) {
   useEffect(() => {
     console.log('test', messages);
   }, [messages]);
-  if (messages.length) {
-    const list = Object.values(messages || {}).map((item, id) => {
-      return (
-        <ListGroupItem className='listItem' key={id}>
-          <span className='author'>{item.author} :</span>
-          <p className='text'>{item.text}</p>
-        </ListGroupItem>
-      );
-    });
-    return list;
-  } else return <div>Список сообщений пуст</div>;
+
+  const list = Object.values(messages[chatId] || {}).map((item, id) => {
+    return (
+      <ListGroupItem className='listItem' key={id}>
+        <span className='author'>{item.author} :</span>
+        <p className='text'>{item.text}</p>
+      </ListGroupItem>
+    );
+  });
+  return list;
 }
 export default Message;
